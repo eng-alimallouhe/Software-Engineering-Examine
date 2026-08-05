@@ -231,7 +231,7 @@
             max-width: 90%;
             max-height: 90%;
             border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
         }
 
         #lightbox .close-btn {
@@ -249,7 +249,8 @@
             color: #bbb;
         }
 
-        .q-image, .image-option-label img {
+        .q-image,
+        .image-option-label img {
             cursor: zoom-in;
         }
     </style>
@@ -274,12 +275,14 @@
         <div id="quiz-screen">
             <div class="header-bar">
                 <span id="mode-title">الوضع الحالي</span>
-                <button class="btn-restart" onclick="location.reload()"><i class="fas fa-home"></i> العودة للرئيسية</button>
+                <button class="btn-restart" onclick="location.reload()"><i class="fas fa-home"></i> العودة
+                    للرئيسية</button>
             </div>
 
             <form id="quiz-form">
                 <div id="questions-container"></div>
-                <button type="button" id="submit-test" onclick="calculateScore()"><i class="fas fa-check-circle"></i> إنهاء الاختبار وعرض النتيجة</button>
+                <button type="button" id="submit-test" onclick="calculateScore()"><i class="fas fa-check-circle"></i>
+                    إنهاء الاختبار وعرض النتيجة</button>
             </form>
 
             <div id="result-display"></div>
@@ -292,22 +295,37 @@
             {
                 id: 1,
                 title: "السؤال الأول (اختر الإجابة الصحيحة):",
-                text: "لدينا الكود التالي:<br><div class='code-block'>input (x, y);<br>z = 0;<br>while (x + y > 0 ){<br>&nbsp;&nbsp;if (x > 0)<br>&nbsp;&nbsp;&nbsp;&nbsp;x = x - 1<br>&nbsp;&nbsp;if (y > 0 )<br>&nbsp;&nbsp;&nbsp;&nbsp;y = y - 1<br>&nbsp;&nbsp;z = z + x + y;<br>}<br>Output(z);</div><br>1_ ما هو مسار الـ All Definition للمتحولات؟",
-                options: ["مسار يمر بجميع العقد في المخطط", "مسار يغطي كل تعريف لمتحول بمسار واحد على الأقل حتى استخدامه", "مسار يغطي جميع الشروط المنطقية", "أطول مسار بسيط في المخطط"],
-                correct: 1
+                text: "لدينا الكود التالي:<br><div class='code-block'>input (x, y);<br>z = 0;<br>while (x + y > 0 ){<br>&nbsp;&nbsp;if (x > 0)<br>&nbsp;&nbsp;&nbsp;&nbsp;x = x - 1;<br>&nbsp;&nbsp;if (y > 0 )<br>&nbsp;&nbsp;&nbsp;&nbsp;y = y - 1;<br>&nbsp;&nbsp;z = z + x + y;<br>}<br>Output(z);</div><br>1_ أي مما يلي يمثل أحد متطلبات All-Definitions لهذا البرنامج؟",
+                options: [
+                    "الوصول من تعريف x في input إلى استخدامه في الشرط (x > 0).",
+                    "زيارة جميع العقد مرة واحدة فقط.",
+                    "تنفيذ الحلقة while مرتين على الأقل.",
+                    "تنفيذ جميع الفروع True و False."
+                ],
+                correct: 0
             },
             {
                 id: 2,
                 title: "السؤال الأول (متابعة):",
-                text: "2_ ما هي المسارات التي تغطي التعريفات مع فروعها؟",
-                options: ["All C-Uses", "All P-Uses", "All Def-Use", "All Edges"],
+                text: "2_ أي معيار اختبار يضمن تغطية جميع أزواج التعريف والاستخدام (Definition-Use Pairs) في البرنامج؟",
+                options: [
+                    "All C-Uses",
+                    "All P-Uses",
+                    "All Def-Use",
+                    "Node Coverage"
+                ],
                 correct: 2
             },
             {
                 id: 3,
                 title: "السؤال الأول (متابعة):",
-                text: "3_ ما هو الـ All p-use؟",
-                options: ["تغطية كل الاستخدامات الحسابية", "تغطية كل الاستخدامات الشرطية (Predicate Uses)", "تغطية كل العقد", "لا شيء مما سبق"],
+                text: "3_ في هذا البرنامج، أي استخدام يُعد Predicate Use (P-Use)؟",
+                options: [
+                    "استخدام x و y في التعليمة z = z + x + y;",
+                    "استخدام x في الشرط if (x > 0).",
+                    "تعريف z في z = 0.",
+                    "إخراج المتحول z في Output(z)."
+                ],
                 correct: 1
             },
             {
@@ -682,7 +700,7 @@
             document.getElementById('lightbox').style.display = 'none';
         }
 
-        document.addEventListener('keydown', function(event) {
+        document.addEventListener('keydown', function (event) {
             if (event.key === "Escape") {
                 closeLightbox();
             }
