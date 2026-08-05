@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>هندسة برمجيات 3 - دورة 2026 أولى</title>
+    <!-- Google Fonts: Tajawal -->
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --success-color: #2ecc71;
+            --danger-color: #e74c3c;
+            --bg-color: #ecf0f1;
+            --card-bg: #ffffff;
+        }
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--primary-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        /* شاشة البداية */
+        #start-screen {
+            text-align: center;
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-top: 50px;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            margin-bottom: 30px;
+        }
+
+        .btn-mode {
+            display: inline-block;
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 15px 30px;
+            font-size: 18px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px;
+            transition: background 0.3s;
+        }
+
+        .btn-mode:hover {
+            background-color: #2980b9;
+        }
+
+        /* شاشة الأسئلة */
+        #quiz-screen {
+            display: none;
+        }
+
+        .header-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--primary-color);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .question-card {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+        }
+
+        .question-title {
+            font-weight: bold;
+            font-size: 18px;
+            margin-bottom: 15px;
+            border-bottom: 2px solid var(--bg-color);
+            padding-bottom: 10px;
+        }
+
+        .code-block {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            direction: ltr;
+            text-align: left;
+            font-family: monospace;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+        }
+
+        .q-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+        }
+
+        .options-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .image-options-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .image-option-label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            background: var(--bg-color);
+            padding: 10px;
+            border-radius: 5px;
+            border: 2px solid transparent;
+            transition: 0.2s;
+        }
+
+        .image-option-label img {
+            max-width: 200px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .option-label {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            background: var(--bg-color);
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .option-label:hover,
+        .image-option-label:hover {
+            background: #dfe6e9;
+        }
+
+        .option-label input,
+        .image-option-label input {
+            margin-left: 10px;
+        }
+
+        /* وضع الدراسة */
+        body.study-mode .is-correct {
+            background-color: #d4edda !important;
+            border: 1px solid var(--success-color);
+            color: #155724;
+        }
+
+        /* وضع الاختبار */
+        #submit-test {
+            background-color: var(--success-color);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 18px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+            display: none;
+        }
+
+        #submit-test:hover {
+            background-color: #27ae60;
+        }
+
+        #result-display {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 20px;
+            padding: 20px;
+            background: var(--card-bg);
+            border-radius: 10px;
+            display: none;
+        }
+
+        .btn-restart {
+            background-color: #7f8c8d;
+            border: none;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        /* Lightbox */
+        #lightbox {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+        }
+
+        #lightbox img {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        }
+
+        #lightbox .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: white;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        #lightbox .close-btn:hover {
+            color: #bbb;
+        }
+
+        .q-image, .image-option-label img {
+            cursor: zoom-in;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Lightbox Overlay -->
+    <div id="lightbox" onclick="closeLightbox()">
+        <span class="close-btn" onclick="closeLightbox()">&times;</span>
+        <img id="lightbox-img" src="" alt="Zoomed Image" onclick="event.stopPropagation()">
+    </div>
+
+    <div class="container">
+        <div id="start-screen">
+            <h1>أسئلة هندسة برمجيات 3 <br><small>دورة 2026 أولى</small></h1>
+            <p>اختر طريقة العرض المناسبة لك لتبدأ:</p>
+            <button class="btn-mode" onclick="startApp('study')"><i class="fas fa-book-open"></i> دراسة مع الحل</button>
+            <button class="btn-mode" onclick="startApp('test')"><i class="fas fa-edit"></i> اختبر نفسك</button>
+        </div>
+
+        <div id="quiz-screen">
+            <div class="header-bar">
+                <span id="mode-title">الوضع الحالي</span>
+                <button class="btn-restart" onclick="location.reload()"><i class="fas fa-home"></i> العودة للرئيسية</button>
+            </div>
+
+            <form id="quiz-form">
+                <div id="questions-container"></div>
+                <button type="button" id="submit-test" onclick="calculateScore()"><i class="fas fa-check-circle"></i> إنهاء الاختبار وعرض النتيجة</button>
+            </form>
+
+            <div id="result-display"></div>
+        </div>
+    </div>
+
+    <script>
+        // قاعدة بيانات الأسئلة
+        const questions = [
+            {
+                id: 1,
+                title: "السؤال الأول (اختر الإجابة الصحيحة):",
+                text: "لدينا الكود التالي:<br><div class='code-block'>input (x, y);<br>z = 0;<br>while (x + y > 0 ){<br>&nbsp;&nbsp;if (x > 0)<br>&nbsp;&nbsp;&nbsp;&nbsp;x = x - 1<br>&nbsp;&nbsp;if (y > 0 )<br>&nbsp;&nbsp;&nbsp;&nbsp;y = y - 1<br>&nbsp;&nbsp;z = z + x + y;<br>}<br>Output(z);</div><br>1_ ما هو مسار الـ All Definition للمتحولات؟",
+                options: ["مسار يمر بجميع العقد في المخطط", "مسار يغطي كل تعريف لمتحول بمسار واحد على الأقل حتى استخدامه", "مسار يغطي جميع الشروط المنطقية", "أطول مسار بسيط في المخطط"],
+                correct: 1
+            },
+            {
+                id: 2,
+                title: "السؤال الأول (متابعة):",
+                text: "2_ ما هي المسارات التي تغطي التعريفات مع فروعها؟",
+                options: ["All C-Uses", "All P-Uses", "All Def-Use", "All Edges"],
+                correct: 2
+            },
+            {
+                id: 3,
+                title: "السؤال الأول (متابعة):",
+                text: "3_ ما هو الـ All p-use؟",
+                options: ["تغطية كل الاستخدامات الحسابية", "تغطية كل الاستخدامات الشرطية (Predicate Uses)", "تغطية كل العقد", "لا شيء مما سبق"],
+                correct: 1
+            },
+            {
+                id: 4,
+                title: "السؤال الثاني (صح أم خطأ):",
+                text: "4_ تتم عملية الاختبار من خلال تحديد حالات الدخل ، تنفيذها ، تلقي الخرج و مقارنته مع المتوقع.",
+                options: ["A (صح)", "B (خطأ)"],
+                correct: 0
+            },
+            {
+                id: 5,
+                title: "السؤال الثاني (صح أم خطأ):",
+                text: "5_ المسار الأولي (Prime Path) هو أطول مسار بسيط.",
+                options: ["A (صح)", "B (خطأ)"],
+                correct: 1 // خطأ، لأنه مسار بسيط لا يمثل جزءاً من مسار بسيط آخر
+            },
+            {
+                id: 6,
+                title: "السؤال الثاني (صح أم خطأ):",
+                text: "6_ معنى Definition of X هو تعريف وإسناد قيمة للمتحول.",
+                options: ["A (صح)", "B (خطأ)"],
+                correct: 0
+            },
+            {
+                id: 7,
+                title: "السؤال الثاني (صح أم خطأ):",
+                text: "7_ الخطأ Fault يؤدي إلى Failure.",
+                options: ["A (صح)", "B (خطأ)"],
+                correct: 0
+            },
+            {
+                id: 8,
+                title: "السؤال الثاني (صح أم خطأ):",
+                text: "8_ يختبر الصندوق الأسود (Black Box) الوظائف دون الحاجة لمعرفة البنية الداخلية للشيفرة.",
+                options: ["A (صح)", "B (خطأ)"],
+                correct: 0
+            },
+            {
+                id: 9,
+                title: "السؤال الثاني (صح أم خطأ):",
+                text: "9_ الديزاين باترن هي تصاميم جاهزة نستخدمها لحل مشكلة متكررة باستخدام البرمجة غرضية التوجه.",
+                options: ["A (صح)", "B (خطأ)"],
+                correct: 0
+            },
+            {
+                id: 10,
+                title: "السؤال الثاني (صح أم خطأ):",
+                text: "10_ المودل بـ MVC هو مُراقب (Observable).",
+                options: ["A (صح)", "B (خطأ)"],
+                correct: 0
+            },
+            {
+                id: 11,
+                title: "السؤال الثاني (صح أم خطأ):",
+                text: "11_ في اختبار الأداء نحن نحمل النظام بحمولة أكبر بكثير من المعتاد ومن ثم ندرس أداؤه.",
+                options: ["A (صح)", "B (خطأ)"],
+                correct: 0
+            },
+            {
+                id: 12,
+                title: "السؤال الثاني (صح أم خطأ):",
+                text: "12_ نمط الـ Observer يفصل بناء الغرض المعقد عن تمثيله.",
+                options: ["A (صح)", "B (خطأ)"],
+                correct: 1 // خطأ، هذا تعريف الـ Builder
+            },
+            {
+                id: 13,
+                title: "السؤال الثاني (صح أم خطأ):",
+                text: "13_ إن الـ Controller هو المسؤول عن معالجة الأحداث (Event handlers).",
+                options: ["A (صح)", "B (خطأ)"],
+                correct: 0
+            },
+            {
+                id: 14,
+                title: "السؤال الثاني (صح أم خطأ):",
+                text: "14_ اختبار تدفق البيانات (Data Flow) يعتمد على تتبع دورة حياة المتحولات (تعريف واستخدام).",
+                options: ["A (صح)", "B (خطأ)"],
+                correct: 0
+            },
+            {
+                id: 15,
+                title: "السؤال الثالث (اختر الإجابة الصحيحة):",
+                text: "15_ لضمان صحة التعامل أثناء التعامل مع الرقعة ضمن لعبة الشطرنج لا بد من التعامل مع غرض واحد من الصنف ChessGame، يتحقق بالنموذج:",
+                options: ["Builder", "Observer", "Adapter", "Singleton"],
+                correct: 3
+            },
+            {
+                id: 16,
+                title: "السؤال الثالث:",
+                text: "16_ يتم خلال عملية اختبار صحة الشيفرة البرمجية:",
+                options: ["تصميم مخططات إحصائية للعمل", "اختبار تكاملية الكتل البرمجية", "جمع معلومات تحليل من الزبون", "حذف الأخطاء من الشيفرة"],
+                correct: 1
+            },
+            {
+                id: 17,
+                title: "السؤال الثالث:",
+                text: "17_ يُعبّر التصميم التالي عن عملية تشكيل صفحة بلغة XML باعتماد:",
+                img: "image.png",
+                options: ["Singleton", "MVC", "Adapter", "Builder"],
+                correct: 3
+            },
+            {
+                id: 18,
+                title: "السؤال الثالث:",
+                text: "18_ بفرض تم تصميم الدارة الموضحة ضمن برنامج محاكاة البوابات المنطقية، إن أي تعديل لقيمة إحدى منفذي الدخل (i1, i2) يؤدي لتعديل مباشر للقيمة على منفذ الخرج O1، يمكن تمثيل ذلك بالنموذج:",
+                img: "image_fc4c03.jpg",
+                options: ["Composite", "Observer", "Adapter", "كل ما سبق غير صحيح"],
+                correct: 1
+            },
+            {
+                id: 19,
+                title: "السؤال الثالث:",
+                text: "19_ ليكن لدينا المخطط التالي لمطعم يقوم بتقديم وجبات كل وجبة تتكون من لحم أو خضار أو دجاج: ما هو الديزاين باترن المناسب له؟",
+                img: "image2.png",
+                options: ["Decorator", "Builder", "Strategy", "Command"],
+                correct: 1
+            },
+            {
+                id: 20,
+                title: "السؤال الثالث:",
+                text: "20_ من المخطط السابق (المطعم): ما هي العلاقة بين AbstractMealBuilder وبين الـ MealMakerProgramm؟",
+                options: ["Aggregation", "Implementation", "وراثة", "Association"],
+                correct: 3
+            },
+            {
+                id: 21,
+                title: "السؤال الثالث:",
+                text: "21_ ليكن لدينا المخطط التالي: ما هو الديزاين باترن المناسب للستاك واللينكد ليست؟",
+                img: "image3.png",
+                options: ["Decorator", "Builder", "Strategy", "Adapter"],
+                correct: 3
+            },
+            {
+                id: 22,
+                title: "السؤال الثالث:",
+                text: "22_ من المخطط السابق أيضاً: ما هي العلاقة بين stack و listStack؟",
+                options: ["Aggregation", "Implementation", "وراثة", "Association"],
+                correct: 2
+            },
+            {
+                id: 23,
+                title: "السؤال الثالث:",
+                text: "23_ ملف نصي قد يحوي عدد صفحات ثم عدد أسطر ثم عدد من الكلمات وقد تحتوي صور والصورة قد يكون لها محتويات مثل كلمات، ما هو المخطط المناسب؟",
+                type: "image_options",
+                options: ["image4.png", "image3.png", "image2.png"],
+                correct: 0
+            },
+            {
+                id: 24,
+                title: "السؤال الثالث:",
+                text: "24_ ما هو الديزاين باترن المناسب للمخطط السابق الذي اخترته؟",
+                options: ["Composition", "Adapter", "Strategy", "Command"],
+                correct: 0 // Composition Pattern هو الصحيح للتعامل مع الشجرة
+            },
+            {
+                id: 25,
+                title: "السؤال الثالث (بناءً على مخطط EPC):",
+                text: "25_ ما هو الـ Node Coverage للمخطط التالي؟",
+                img: "image5.png",
+                options: ["{1, 2, 3}", "{1, 2, 4, 5}", "{1, 2, 3, 4, 5}", "{2, 4, 5}"],
+                correct: 2
+            },
+            {
+                id: 26,
+                title: "السؤال الثالث (بناءً على مخطط EPC):",
+                text: "26_ ما هو الـ Edge Coverage (تغطية الحواف) للمخطط؟",
+                options: [
+                    "{(1,2), (2,3), (2,4), (4,5), (5,2)}",
+                    "{(1,2), (2,3), (2,4)}",
+                    "{[1,2,4], [1,2,3]}",
+                    "{1, 2, 3, 4, 5}"
+                ],
+                correct: 0 // تغطية الحواف تعني جميع الأسهم الموجودة في المخطط
+            },
+            {
+                id: 27,
+                title: "السؤال الثالث (بناءً على مخطط EPC):",
+                text: "27_ ما هو الـ Edge Coverage لـ TR؟ (متطلبات الاختبار لتغطية الحواف)",
+                options: [
+                    "TR = {1, 2, 3, 4, 5}",
+                    "TR = {(1,2), (2,3), (2,4), (4,5), (5,2)}",
+                    "TR = {[1,2,3], [1,2,4,5,2,3]}",
+                    "TR = {[1,2,4], [2,4,5]}"
+                ],
+                correct: 1 // متطلبات التغطية للحواف هي المرور بكل حافة
+            },
+            {
+                id: 28,
+                title: "السؤال الثالث (بناءً على مخطط EPC):",
+                text: "28_ أي مما يلي يمثل Complete Path؟",
+                options: [
+                    "[1, 2, 4, 5]",
+                    "[4, 5, 2]",
+                    "[1, 2, 4, 5, 2, 3]",
+                    "[2, 4, 5, 2]"
+                ],
+                correct: 2 // المسار الكامل يجب أن يبدأ بـ 1 وينتهي بـ 3
+            },
+            {
+                id: 29,
+                title: "السؤال الثالث (بناءً على مخطط EPC):",
+                text: "29_ ما هو الـ Edge-Pair لـ TR (متطلبات تغطية أزواج الحواف)؟",
+                options: [
+                    "{[1,2,4], [2,4,5], [4,5,2], [5,2,4], [1,2,3], [5,2,3]}",
+                    "{(1,2), (2,3), (2,4), (4,5), (5,2)}",
+                    "{[1,2,4,5], [4,5,2,3]}",
+                    "{[1,2], [2,3], [4,5]}"
+                ],
+                correct: 0 // أزواج الحواف المتتالية كما هي مكتوبة بالصورة تماماً
+            },
+            {
+                id: 30,
+                title: "السؤال الثالث (بناءً على مخطط EPC):",
+                text: "30_ ما هي مسارات الاختبار (Test Paths) التي تحقق تغطية الـ Edge-Pair بالكامل؟",
+                options: [
+                    "{t1, t3}",
+                    "{t2, t3} (لأن t2 يغطي الحلقة مرتين مما يغطي الزوج [5,2,4])",
+                    "{t1, t2}",
+                    "{t3} فقط"
+                ],
+                correct: 1 // المسار t1 لا يغطي [5,2,4]، بينما t2 يغطيه. و t3 يغطي [1,2,3]
+            },
+            {
+                id: 31,
+                title: "السؤال الثالث (بناءً على مخطط EPC):",
+                text: "31_ أي مما يلي يمثل مساراً بسيطاً (Simple Path) من المخطط؟",
+                options: [
+                    "[1, 2, 4, 5, 2, 3] (تكررت العقدة 2 في المنتصف وهذا يكسر البساطة)",
+                    "[4,5,2,3]",
+                    "[2, 4, 5, 2, 4]",
+                    "[4, 5, 2, 3, 1]"
+                ],
+                correct: 1 // المسار البسيط لا يحوي عقد مكررة باستثناء العقدة الأولى والأخيرة
+            },
+            {
+                id: 32,
+                title: "السؤال الثالث (بناءً على مخطط EPC):",
+                text: "32_ أي مما يلي يمثل مساراً أولياً (Prime Path) في هذا المخطط؟",
+                options: [
+                    "[1, 2, 4]",
+                    "[2, 4, 5, 2] (ليس أولياً لأنه جزء من مسار بسيط أطول وهو [1,2,4,5,2])",
+                    "[2,4,5,2] ",
+                    "[1, 2, 4, 5, 2, 3] (ليس مساراً بسيطاً بالأساس)"
+                ],
+                correct: 2 // المسار الأولي هو مسار بسيط لا يعتبر جزءاً من مسار بسيط آخر
+            },
+            {
+                id: 33,
+                title: "السؤال الثالث:",
+                text: "33_ ما الديزاين باترن المناسب لتحديد إما الخروج من لعبة الشطرنج أو هزيمة الخصم بقتل الملك؟",
+                options: ["Strategy", "Command", "State", "Singleton"],
+                correct: 2
+            },
+            {
+                id: 35,
+                title: "السؤال الثالث:",
+                text: "35_ يمكن إضافة ألوان وأضواء (إضافات ديناميكية)، ما هو الديزاين باترن المناسب؟",
+                options: ["Strategy", "Command", "State", "Decorator"],
+                correct: 3
+            },
+            {
+                id: 36,
+                title: "السؤال الثالث:",
+                text: "36_ في لعبة الشطرنج إذا قام اللاعب بقتل الجندي أو خسر اللعبة أو أغلق اللعبة وقت يرجع بدو يشوف وين وصل، شو الديزاين باترن المناسب؟",
+                options: ["Observer", "Memento", "State", "Strategy"],
+                correct: 1
+            },
+            {
+                id: 37,
+                title: "السؤال الثالث:",
+                text: "37_ إذا قام اللاعب بالتنقل حسب الاستراتيجيات في وقت اللعب، ما الديزاين باترن المناسب؟",
+                options: ["State", "Adapter", "Observer", "Command"],
+                correct: 0
+            },
+            {
+                id: 38,
+                title: "السؤال الثالث:",
+                text: "38_ استراتيجيات دفاع هجوم، ما الديزاين باترن المناسب؟",
+                options: ["State", "Strategy", "Builder", "Command"],
+                correct: 1
+            },
+            {
+                id: 39,
+                title: "السؤال الثالث:",
+                text: "39_ كيف بتخلي اللاعب يستخدم وضعيات مبرمجة من دون التغيير عليها؟",
+                options: ["Strategy", "Adapter", "Builder", "Template Method"],
+                correct: 0
+            }
+        ];
+
+        let currentMode = '';
+
+        function renderQuestions() {
+            const container = document.getElementById('questions-container');
+            container.innerHTML = '';
+
+            questions.forEach((q, index) => {
+                const card = document.createElement('div');
+                card.className = 'question-card';
+                card.id = `card-${q.id}`;
+
+                let html = `<div class="question-title">${q.title}</div>`;
+                html += `<p>${q.text}</p>`;
+
+                // إضافة صورة إن وجدت
+                if (q.img) {
+                    html += `<img src="${q.img}" class="q-image" alt="صورة السؤال" onclick="openLightbox(this.src); event.stopPropagation();">`;
+                }
+
+                // عرض الخيارات
+                if (q.type === 'image_options') {
+                    html += `<div class="image-options-group">`;
+                    q.options.forEach((opt, optIndex) => {
+                        const isCorrectClass = (currentMode === 'study' && optIndex === q.correct) ? 'is-correct' : '';
+                        html += `
+                            <label class="image-option-label ${isCorrectClass}" id="label-${q.id}-${optIndex}">
+                                <img src="${opt}" alt="Option ${optIndex + 1}" onclick="openLightbox(this.src); event.preventDefault(); event.stopPropagation();">
+                                <div><input type="radio" name="q${q.id}" value="${optIndex}"> اختيار ${optIndex + 1}</div>
+                            </label>
+                        `;
+                    });
+                    html += `</div>`;
+                } else {
+                    html += `<div class="options-group">`;
+                    q.options.forEach((opt, optIndex) => {
+                        const isCorrectClass = (currentMode === 'study' && optIndex === q.correct) ? 'is-correct' : '';
+                        html += `
+                            <label class="option-label ${isCorrectClass}" id="label-${q.id}-${optIndex}">
+                                <input type="radio" name="q${q.id}" value="${optIndex}"> ${opt}
+                            </label>
+                        `;
+                    });
+                    html += `</div>`;
+                }
+
+                card.innerHTML = html;
+                container.appendChild(card);
+            });
+        }
+
+        function startApp(mode) {
+            currentMode = mode;
+            document.getElementById('start-screen').style.display = 'none';
+            document.getElementById('quiz-screen').style.display = 'block';
+
+            renderQuestions();
+
+            if (mode === 'study') {
+                document.body.classList.add('study-mode');
+                document.getElementById('mode-title').innerHTML = '<i class="fas fa-book-open"></i> وضع الدراسة (الإجابات الصحيحة مظللة بالأخضر)';
+
+                // تعطيل الأزرار واختيار الإجابة الصحيحة
+                questions.forEach(q => {
+                    const radios = document.querySelectorAll(`input[name="q${q.id}"]`);
+                    radios.forEach(radio => radio.disabled = true);
+                    const correctRadio = document.querySelector(`input[name="q${q.id}"][value="${q.correct}"]`);
+                    if (correctRadio) correctRadio.checked = true;
+                });
+            } else if (mode === 'test') {
+                document.body.classList.add('test-mode');
+                document.getElementById('mode-title').innerHTML = '<i class="fas fa-edit"></i> وضع الاختبار';
+                document.getElementById('submit-test').style.display = 'block';
+            }
+        }
+
+        function openLightbox(src) {
+            document.getElementById('lightbox-img').src = src;
+            document.getElementById('lightbox').style.display = 'flex';
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightbox').style.display = 'none';
+        }
+
+        document.addEventListener('keydown', function(event) {
+            if (event.key === "Escape") {
+                closeLightbox();
+            }
+        });
+
+        function calculateScore() {
+            let score = 0;
+            let total = questions.length;
+
+            questions.forEach(q => {
+                let selected = document.querySelector(`input[name="q${q.id}"]:checked`);
+                let correctLabelId = `label-${q.id}-${q.correct}`;
+                let correctLabel = document.getElementById(correctLabelId);
+
+                // إظهار الجواب الصحيح دائماً بالأخضر
+                if (correctLabel) correctLabel.style.backgroundColor = '#d4edda';
+
+                if (selected) {
+                    let selectedValue = parseInt(selected.value);
+                    if (selectedValue === q.correct) {
+                        score++;
+                    } else {
+                        // تلوين الجواب الخاطئ بالأحمر
+                        let selectedLabelId = `label-${q.id}-${selectedValue}`;
+                        document.getElementById(selectedLabelId).style.backgroundColor = '#f8d7da';
+                    }
+                }
+            });
+
+            let resultDiv = document.getElementById('result-display');
+            resultDiv.style.display = 'block';
+
+            let percentage = Math.round((score / total) * 100);
+            resultDiv.innerHTML = `نتيجتك هي: ${score} من ${total} (${percentage}%)`;
+
+            document.getElementById('submit-test').style.display = 'none';
+
+            // تعطيل تغيير الإجابات بعد التسليم
+            let allRadios = document.querySelectorAll('input[type="radio"]');
+            allRadios.forEach(r => r.disabled = true);
+
+            window.scrollTo(0, document.body.scrollHeight);
+        }
+    </script>
+</body>
+
+</html>
